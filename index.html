@@ -4,70 +4,209 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ramadan Timetable 2026 - Sahibganj Jharkhand</title>
-    
-    <!-- External Fonts -->
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- PDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- Urdu Font -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    
+
+    <style>
+        body {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .urdu-text { font-family: 'Noto Sans Arabic', serif; }
+
+        /* PRINT SAFE DARK THEME */
+        @media print {
+            .no-print { display: none !important; }
+            body {
+                background-color: white;
+                padding: 0;
+                color: #000 !important;
+            }
+            .main-card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+                border-radius: 0;
+                max-width: 100%;
+                width: 100%;
+            }
+            .print-dark-header {
+                background-color: #1f2937 !important; /* slate-800 */
+                color: #000 !important;
+            }
+            .print-dark-head {
+                background-color: #374151 !important; /* slate-700 */
+                color: #000 !important;
+            }
+            th, td {
+                border: 1px solid #999 !important;
+            }
+        }
+    </style>
 </head>
-<body>
 
-    <div class="container">
-        <!-- Header -->
-        <header>
-            <h1>رمضان مبارک</h1>
-            <h2>ٹائم ٹیبل ۲۰۲۶ء - ١٤٤٧ھ</h2>
-            <div class="sub-title" dir="ltr">Ramadan Timetable 2026 - 1447 AH</div>
-            <div class="location-badge" dir="ltr">Sahibganj Jharkhand</div>
-        </header>
+<body class="p-2 md:p-8">
 
-        <div class="no-print" style="text-align: center;">
-            <button class="print-btn" onclick="window.print()">پرنٹ کریں (Print)</button>
+<div id="pdf-content" class="main-card max-w-4xl mx-auto bg-white shadow-2xl rounded-xl overflow-hidden border border-emerald-100">
+
+    <!-- TOP SECTION -->
+    <div class="p-6 text-center space-y-3 bg-emerald-800 text-white print-dark-header">
+
+        <h1 class="text-4xl md:text-6xl font-black urdu-text">رمضان مبارک</h1>
+
+        <h2 class="text-xl md:text-2xl font-bold urdu-text">
+            رمضان ٹائم ٹیبل ۲۰۲۶ء - ١٤٤٧ھ
+        </h2>
+
+        <p class="text-sm md:text-lg font-medium tracking-wide opacity-90 uppercase">
+            Ramadan Timetable 2026 - 1447 AH
+        </p>
+
+        <div class="flex flex-col items-center gap-1 border-t border-white/20 pt-3">
+            <span class="text-xl font-bold urdu-text">صاحب گنج، جھارکھنڈ</span>
+            <span class="text-xs md:text-sm font-bold tracking-widest uppercase opacity-80">
+                Sahibganj Jharkhand
+            </span>
         </div>
 
-        <!-- Timetable -->
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>رمضان</th>
-                        <th>تاریخ</th>
-                        <th>ختم سحر</th>
-                        <th>اذان فجر</th>
-                        <th>افطار</th>
-                    </tr>
-                </thead>
-                <tbody id="timetableBody">
-                    <!-- JavaScript will generate these rows -->
-                </tbody>
-            </table>
-        </div>
+        <!-- PRINT & DOWNLOAD BUTTONS (SAME COLOR + ANIMATION) -->
+        <div class="no-print pt-4 flex flex-wrap justify-center gap-3">
 
-        <!-- Prayers & Source -->
-        <div class="footer-content">
-            <div class="dua-box">
-                <div class="dua-title">افطار کی دعا:</div>
-                <p class="dua-arabic">اللَّهُمَّ لَكَ صُمْتُ، وَبِكَ آمَنْتُ وَعَلَيْكَ تَوَكَّلْتُ، وَعَلَى رِزْقِكَ أَفْطَرْتُ</p>
-                <div style="border-top: 1px solid #d1fae5; padding-top: 10px;">
-                    <p><strong>ترجمہ:</strong> اے اللہ میں نے تیری رضا کے لیے روزہ رکھا، تجھ پر ایمان لایا، تجھ ہی پر بھروسا کیا، اور تیرے ہی دیے ہوئے رزق سے افطار کیا۔</p>
-                </div>
-            </div>
+            <button onclick="window.print()"
+                class="bg-slate-800 text-white px-6 py-2 rounded-full font-black
+                       flex items-center gap-2
+                       transition-all duration-150 ease-out
+                       hover:bg-slate-700
+                       active:scale-90 active:bg-slate-900
+                       shadow-lg active:shadow-md">
+                <span class="urdu-text">پرنٹ کریں</span>
+                <span>/ PRINT</span>
+            </button>
 
-            <div class="source-attribution">
-                <p>یہ ڈیٹا "کشکول اردو" سے لیا گیا ہے</p>
-                <p dir="ltr">This data is taken from "Kashkol Urdu"</p>
-            </div>
-        </div>
+            <button onclick="downloadPDF()"
+                class="bg-slate-800 text-white px-6 py-2 rounded-full font-black
+                       flex items-center gap-2
+                       transition-all duration-150 ease-out
+                       hover:bg-slate-700
+                       active:scale-90 active:bg-slate-900
+                       shadow-lg active:shadow-md">
+                <span class="urdu-text">ڈاؤن لوڈ</span>
+                <span>/ DOWNLOAD</span>
+            </button>
 
-        <!-- Final Credit Footer -->
-        <div class="signature-footer" dir="ltr">
-            <div class="signature-name">Talib e Dua:<br>
-                Md Abdullah Khan</div>
-            <div style="opacity: 0.7; font-size: 1.1rem;">(Aazad Medical Hall)</div>
-            <div style="margin-top: 15px; font-size: 0.7rem; color: #64748b; letter-spacing: 2px;">SAHIBGANJ JHARKHAND — 2026</div>
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <!-- TABLE -->
+    <div class="overflow-x-auto">
+        <table class="w-full text-center border-collapse">
+            <thead class="bg-emerald-700 text-white print-dark-head">
+                <tr>
+                    <th class="py-4 px-2 border-l">رمضان</th>
+                    <th class="py-4 px-2 border-l">تاریخ</th>
+                    <th class="py-4 px-2 border-l">ختم سحر</th>
+                    <th class="py-4 px-2 border-l">اذان فجر</th>
+                    <th class="py-4 px-2">افطار</th>
+                </tr>
+            </thead>
+            <tbody id="timetableBody"></tbody>
+        </table>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="p-4 bg-emerald-50/30 text-center border-t border-emerald-100">
+        <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">
+            Data Source:
+            <span class="text-emerald-700">Kashkol-e-Urdu</span>
+            (صاحب گنج جھارکھنڈ)
+        </p>
+    </div>
+
+</div>
+
+<script>
+const originalData = [
+ { d: 1, date: "19 Feb", s: "04:55", i: "17:35" },
+ { d: 2, date: "20 Feb", s: "04:54", i: "17:36" },
+ { d: 3, date: "21 Feb", s: "04:53", i: "17:37" },
+ { d: 4, date: "22 Feb", s: "04:53", i: "17:37" },
+ { d: 5, date: "23 Feb", s: "04:52", i: "17:38" },
+ { d: 6, date: "24 Feb", s: "04:51", i: "17:38" },
+ { d: 7, date: "25 Feb", s: "04:50", i: "17:39" },
+ { d: 8, date: "26 Feb", s: "04:50", i: "17:39" },
+ { d: 9, date: "27 Feb", s: "04:49", i: "17:40" },
+ { d: 10, date: "28 Feb", s: "04:48", i: "17:40" },
+ { d: 11, date: "01 Mar", s: "04:46", i: "17:42" },
+ { d: 12, date: "02 Mar", s: "04:45", i: "17:42" },
+ { d: 13, date: "03 Mar", s: "04:44", i: "17:43" },
+ { d: 14, date: "04 Mar", s: "04:43", i: "17:43" },
+ { d: 15, date: "05 Mar", s: "04:43", i: "17:44" },
+ { d: 16, date: "06 Mar", s: "04:42", i: "17:44" },
+ { d: 17, date: "07 Mar", s: "04:41", i: "17:45" },
+ { d: 18, date: "08 Mar", s: "04:40", i: "17:45" },
+ { d: 19, date: "09 Mar", s: "04:39", i: "17:46" },
+ { d: 20, date: "10 Mar", s: "04:38", i: "17:46" },
+ { d: 21, date: "11 Mar", s: "04:37", i: "17:47" },
+ { d: 22, date: "12 Mar", s: "04:36", i: "17:47" },
+ { d: 23, date: "13 Mar", s: "04:35", i: "17:48" },
+ { d: 24, date: "14 Mar", s: "04:34", i: "17:48" },
+ { d: 25, date: "15 Mar", s: "04:33", i: "17:48" },
+ { d: 26, date: "16 Mar", s: "04:31", i: "17:49" },
+ { d: 27, date: "17 Mar", s: "04:30", i: "17:49" },
+ { d: 28, date: "18 Mar", s: "04:29", i: "17:50" },
+ { d: 29, date: "19 Mar", s: "04:28", i: "17:50" },
+ { d: 30, date: "20 Mar", s: "04:27", i: "17:51" }
+];
+
+function format12h(timeStr, offset) {
+    let [h, m] = timeStr.split(':').map(Number);
+    let total = h * 60 + m + offset;
+    total = (total + 1440) % 1440;
+    let nh = Math.floor(total / 60);
+    let nm = total % 60;
+    let ampm = nh >= 12 ? 'PM' : 'AM';
+    nh = nh % 12 || 12;
+    return `${nh}:${nm < 10 ? '0' + nm : nm} ${ampm}`;
+}
+
+const tbody = document.getElementById('timetableBody');
+
+originalData.forEach((row, idx) => {
+    const tr = document.createElement('tr');
+    tr.className = `border-b ${idx % 2 === 0 ? 'bg-white' : 'bg-emerald-50/20'}`;
+
+    tr.innerHTML = `
+        <td class="py-3 px-2 font-bold text-emerald-900 border-l">${row.d}</td>
+        <td class="py-3 px-2 font-bold text-slate-600 border-l">${row.date}</td>
+        <td class="py-3 px-2 font-mono text-blue-700 font-black border-l">${format12h(row.s, -3)}</td>
+        <td class="py-3 px-2 font-mono text-indigo-700 font-black border-l">${format12h(row.s, 2)}</td>
+        <td class="py-3 px-2 font-mono text-orange-700 font-black">${format12h(row.i, 2)}</td>
+    `;
+    tbody.appendChild(tr);
+});
+
+function downloadPDF() {
+    const element = document.getElementById('pdf-content');
+    const buttons = document.querySelector('.no-print');
+    buttons.style.visibility = 'hidden';
+
+    html2pdf().set({
+        margin: 0.5,
+        filename: 'Ramadan_Timetable_2026_Sahibganj.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    }).from(element).save().then(() => {
+        buttons.style.visibility = 'visible';
+    });
+}
+</script>
+
 </body>
 </html>
-
