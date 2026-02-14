@@ -21,7 +21,6 @@
         }
         .urdu-text { font-family: 'Noto Sans Arabic', serif; }
 
-        /* PRINT SAFE DARK THEME */
         @media print {
             .no-print { display: none !important; }
             body {
@@ -37,11 +36,11 @@
                 width: 100%;
             }
             .print-dark-header {
-                background-color: #1f2937 !important; /* slate-800 */
+                background-color: #1f2937 !important;
                 color: #000 !important;
             }
             .print-dark-head {
-                background-color: #374151 !important; /* slate-700 */
+                background-color: #374151 !important;
                 color: #000 !important;
             }
             th, td {
@@ -75,7 +74,7 @@
             </span>
         </div>
 
-        <!-- PRINT & DOWNLOAD BUTTONS (SAME COLOR + ANIMATION) -->
+        <!-- BUTTONS -->
         <div class="no-print pt-4 flex flex-wrap justify-center gap-3">
 
             <button onclick="window.print()"
@@ -164,15 +163,14 @@ const originalData = [
  { d: 30, date: "20 Mar", s: "04:27", i: "17:51" }
 ];
 
-function format12h(timeStr, offset) {
+function format12hNoAmPm(timeStr, offset) {
     let [h, m] = timeStr.split(':').map(Number);
     let total = h * 60 + m + offset;
     total = (total + 1440) % 1440;
     let nh = Math.floor(total / 60);
     let nm = total % 60;
-    let ampm = nh >= 12 ? 'PM' : 'AM';
     nh = nh % 12 || 12;
-    return `${nh}:${nm < 10 ? '0' + nm : nm} ${ampm}`;
+    return `${nh}:${nm < 10 ? '0' + nm : nm}`;
 }
 
 const tbody = document.getElementById('timetableBody');
@@ -184,9 +182,9 @@ originalData.forEach((row, idx) => {
     tr.innerHTML = `
         <td class="py-3 px-2 font-bold text-emerald-900 border-l">${row.d}</td>
         <td class="py-3 px-2 font-bold text-slate-600 border-l">${row.date}</td>
-        <td class="py-3 px-2 font-mono text-blue-700 font-black border-l">${format12h(row.s, -3)}</td>
-        <td class="py-3 px-2 font-mono text-indigo-700 font-black border-l">${format12h(row.s, 2)}</td>
-        <td class="py-3 px-2 font-mono text-orange-700 font-black">${format12h(row.i, 2)}</td>
+        <td class="py-3 px-2 font-mono text-blue-700 font-black border-l">${format12hNoAmPm(row.s, -3)}</td>
+        <td class="py-3 px-2 font-mono text-indigo-700 font-black border-l">${format12hNoAmPm(row.s, 2)}</td>
+        <td class="py-3 px-2 font-mono text-orange-700 font-black">${format12hNoAmPm(row.i, 2)}</td>
     `;
     tbody.appendChild(tr);
 });
