@@ -34,27 +34,32 @@
     margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink);
     font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 900px; margin: 0 auto; padding: 28px 20px 80px; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 28px 20px 80px; }
   header.top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 22px; flex-wrap: wrap; }
   h1 { font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 28px; margin: 0; letter-spacing: -0.01em; color: var(--brand); }
   .today { font-size: 13px; color: var(--ink-soft); }
-  .summary-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 22px; }
+
+  .summary-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 22px; }
   .sum-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
-  .sum-card .n { font-family: 'Source Serif 4', serif; font-size: 24px; font-weight: 600; line-height: 1; }
+  .sum-card .n { font-family: 'Source Serif 4', serif; font-size: 22px; font-weight: 600; line-height: 1.1; }
   .sum-card .l { font-size: 12.5px; color: var(--ink-soft); margin-top: 4px; }
   .sum-card.expired .n { color: var(--red); }
   .sum-card.soon .n { color: var(--amber); }
+  .sum-card.value .n { color: var(--brand); }
 
   form#addForm {
     background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
-    padding: 16px; margin-bottom: 24px; display: grid; grid-template-columns: 1.6fr 0.8fr 1fr auto; gap: 10px; align-items: end;
+    padding: 16px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 10px; align-items: end;
   }
-  .field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+  .field { display: flex; flex-direction: column; gap: 5px; min-width: 0; flex: 1 1 130px; }
+  .field.wide { flex: 1 1 200px; }
   .field label { font-size: 12.5px; color: var(--ink-soft); }
   .field input { font: inherit; font-size: 15px; padding: 9px 10px; border-radius: 7px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; }
   .field input:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
   button.primary { background: var(--brand); color: #fff; border: none; border-radius: 7px; padding: 10px 16px; font: inherit; font-weight: 600; font-size: 14.5px; cursor: pointer; white-space: nowrap; height: fit-content; }
   button.primary:hover { opacity: 0.92; }
+  #addForm > button.primary { flex: 1 1 100%; }
+  @media (min-width: 700px) { #addForm > button.primary { flex: 0 0 auto; } }
 
   .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
   .toolbar input[type="search"] { flex: 1; min-width: 160px; font: inherit; font-size: 14.5px; padding: 9px 12px; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
@@ -68,6 +73,7 @@
   .row .meta { font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
   .row .meta.expired { color: var(--red); font-weight: 600; }
   .row .meta.soon { color: var(--amber); font-weight: 600; }
+  .row .value-col { font-weight: 600; font-size: 14px; white-space: nowrap; }
   .qty-group { display: flex; align-items: center; gap: 6px; }
   .qty-group button { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font-size: 15px; cursor: pointer; line-height: 1; }
   .qty-group .qty { min-width: 30px; text-align: center; font-weight: 600; font-size: 14.5px; }
@@ -77,10 +83,8 @@
   .empty { text-align: center; padding: 48px 20px; color: var(--ink-soft); background: var(--surface); border: 1px dashed var(--line); border-radius: var(--radius); }
   .empty .big { font-family: 'Source Serif 4', serif; font-size: 18px; color: var(--ink); margin-bottom: 6px; }
 
-  .status { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 20px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
+  .status { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 20px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .25s ease; z-index: 20; }
   .status.show { opacity: 0.92; }
-
-  .banner { background: var(--amber-soft); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 20px; font-size: 13px; color: var(--ink-soft); }
 
   .upload-card { background: var(--brand-soft); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin-bottom: 20px; }
   .upload-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -92,8 +96,8 @@
   .settings-btn:hover { color: var(--ink); }
   .settings-panel { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
   .settings-panel label { font-size: 12.5px; color: var(--ink-soft); display: block; margin-bottom: 5px; }
-  .settings-row { display: flex; gap: 8px; }
-  .settings-row input { flex: 1; font: inherit; font-size: 13.5px; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+  .settings-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .settings-row input { flex: 1; min-width: 180px; font: inherit; font-size: 13.5px; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
   .settings-hint { font-size: 12px; color: var(--ink-soft); margin: 10px 0 0; line-height: 1.5; }
   .settings-hint a { color: var(--brand); }
 
@@ -102,13 +106,19 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .upload-status.err { color: var(--red); }
 
-  .review-list { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
-  .review-row { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: grid; grid-template-columns: 1.6fr 0.7fr 1fr auto; gap: 8px; align-items: center; }
+  .supplier-field { margin-top: 14px; }
+  .supplier-field label { font-size: 12.5px; color: var(--ink-soft); display: block; margin-bottom: 5px; }
+  .supplier-field input { width: 100%; font: inherit; font-size: 14px; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+
+  .review-list { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .review-row { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap; }
   .review-row.missing-exp { border-color: var(--amber); }
-  .review-row input { font: inherit; font-size: 13.5px; padding: 7px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; }
-  .review-row .rm { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: 13px; padding: 6px; border-radius: 6px; }
+  .rr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; flex: 1 1 auto; min-width: 220px; }
+  .rr-field label { font-size: 11px; color: var(--ink-soft); display: block; margin-bottom: 3px; }
+  .rr-field input { font: inherit; font-size: 13.5px; padding: 7px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; }
+  .review-row .rm { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: 13px; padding: 6px; border-radius: 6px; flex: 0 0 auto; }
   .review-row .rm:hover { background: var(--red-soft); color: var(--red); }
-  .review-hint { font-size: 12px; color: var(--amber); margin-top: -2px; }
+  .review-hint { font-size: 12px; color: var(--amber); margin-top: 4px; }
   .review-actions { display: flex; gap: 10px; margin-top: 12px; align-items: center; flex-wrap: wrap; }
   .review-actions .primary { padding: 9px 16px; font-size: 13.5px; }
   .review-actions .cancel { background: none; border: 1px solid var(--line); color: var(--ink-soft); border-radius: 7px; padding: 9px 14px; font: inherit; font-size: 13.5px; cursor: pointer; }
@@ -116,15 +126,8 @@
 
   @media (max-width: 560px) {
     .settings-btn { margin-left: 0; }
-    .review-row { grid-template-columns: 1fr 1fr; }
-    .review-row .rm { grid-column: 1 / -1; justify-self: start; }
-  }
-
-  @media (max-width: 560px) {
-    form#addForm { grid-template-columns: 1fr 1fr; }
-    form#addForm button { grid-column: 1 / -1; }
     .row { grid-template-columns: 1fr; row-gap: 8px; }
-    .row .qty-group, .row .del-btn { justify-self: start; }
+    .row .qty-group, .row .del-btn, .row .value-col { justify-self: start; }
   }
 </style>
 </head>
@@ -139,16 +142,33 @@
     <div class="sum-card"><div class="n" id="sumTotal">0</div><div class="l">medicines tracked</div></div>
     <div class="sum-card soon"><div class="n" id="sumSoon">0</div><div class="l">expiring within 30 days</div></div>
     <div class="sum-card expired"><div class="n" id="sumExpired">0</div><div class="l">already expired</div></div>
+    <div class="sum-card value"><div class="n" id="sumValue">₹0</div><div class="l">inventory value, at cost</div></div>
   </div>
 
   <form id="addForm">
-    <div class="field">
+    <div class="field wide">
       <label for="fName">Medicine name</label>
       <input type="text" id="fName" placeholder="e.g. Paracetamol 500mg" required>
     </div>
     <div class="field">
+      <label for="fBatch">Batch no.</label>
+      <input type="text" id="fBatch" placeholder="Optional">
+    </div>
+    <div class="field wide">
+      <label for="fSupplier">Supplier</label>
+      <input type="text" id="fSupplier" placeholder="Optional">
+    </div>
+    <div class="field">
       <label for="fQty">Quantity</label>
       <input type="number" id="fQty" min="0" step="1" value="1" required>
+    </div>
+    <div class="field">
+      <label for="fRate">Purchase rate ₹</label>
+      <input type="number" id="fRate" min="0" step="0.01" placeholder="Optional">
+    </div>
+    <div class="field">
+      <label for="fMrp">MRP ₹</label>
+      <input type="number" id="fMrp" min="0" step="0.01" placeholder="Optional">
     </div>
     <div class="field">
       <label for="fExp">Expiry date</label>
@@ -163,20 +183,20 @@
         <div class="upload-title">Add from an invoice</div>
         <div class="upload-sub">Upload a photo of a supplier bill — items get pulled out automatically, for you to check before adding.</div>
       </div>
-      <button type="button" class="settings-btn" id="settingsBtn">API key</button>
+      <button type="button" class="settings-btn" id="settingsBtn">Gemini API key</button>
       <label class="upload-btn" for="invoiceFile" id="uploadBtnLabel">Upload photo</label>
       <input type="file" id="invoiceFile" accept="image/*" hidden>
     </div>
     <div class="settings-panel" id="settingsPanel" hidden>
-      <label for="apiKeyInput">Anthropic API key</label>
+      <label for="apiKeyInput">Google Gemini API key</label>
       <div class="settings-row">
-        <input type="password" id="apiKeyInput" placeholder="sk-ant-...">
+        <input type="password" id="apiKeyInput" placeholder="AIza...">
         <button type="button" class="primary" id="saveKeyBtn">Save</button>
         <button type="button" class="cancel" id="clearKeyBtn">Clear</button>
       </div>
       <p class="settings-hint">
-        Stored only in this browser (never sent anywhere but Anthropic's API). Get a key at
-        <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>.
+        Stored only in this browser (never sent anywhere but Google's API). Get a free key at
+        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com</a>.
         Because this is a plain static site with no server, the key is sent directly from your
         browser — fine for your own private use on a device you trust, not for a page you'd share
         publicly. See the README for details.
@@ -192,6 +212,7 @@
       <option value="expiry">Sort: expiry (soonest)</option>
       <option value="name">Sort: name (A–Z)</option>
       <option value="qty">Sort: quantity (low first)</option>
+      <option value="value">Sort: value (highest first)</option>
     </select>
   </div>
 
@@ -205,7 +226,7 @@
 // Same device + same browser = data persists across visits.
 // Different device/browser = separate data. Back it up with the
 // Export/Import snippet in the README if you need to move it.
-const STORAGE_KEY = 'store_stock_items_v1';
+const STORAGE_KEY = 'store_stock_items_v2';
 
 let items = [];
 const $ = (id) => document.getElementById(id);
@@ -264,20 +285,42 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+function formatINR(n) {
+  if (!isFinite(n)) return '—';
+  return '₹' + n.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+}
+
+function lineValue(it) {
+  return (it.quantity || 0) * (Number(it.purchaseRate) || 0);
+}
+
+function metaLine(it) {
+  const parts = [];
+  if (it.batch) parts.push('Batch ' + it.batch);
+  if (it.supplier) parts.push('from ' + it.supplier);
+  return parts.join(', ');
+}
+
 function render() {
   const q = $('search').value.trim().toLowerCase();
   const sortMode = $('sortSel').value;
 
-  let filtered = items.filter(it => it.name.toLowerCase().includes(q));
+  let filtered = items.filter(it =>
+    it.name.toLowerCase().includes(q) ||
+    (it.supplier || '').toLowerCase().includes(q) ||
+    (it.batch || '').toLowerCase().includes(q)
+  );
   filtered.sort((a, b) => {
     if (sortMode === 'name') return a.name.localeCompare(b.name);
     if (sortMode === 'qty') return a.quantity - b.quantity;
+    if (sortMode === 'value') return lineValue(b) - lineValue(a);
     return a.expiry.localeCompare(b.expiry);
   });
 
   $('sumTotal').textContent = items.length;
   $('sumSoon').textContent = items.filter(it => { const d = daysUntil(it.expiry); return d >= 0 && d <= 30; }).length;
   $('sumExpired').textContent = items.filter(it => daysUntil(it.expiry) < 0).length;
+  $('sumValue').textContent = formatINR(items.reduce((sum, it) => sum + lineValue(it), 0));
 
   if (filtered.length === 0) {
     listEl.innerHTML = `<div class="empty"><div class="big">${items.length === 0 ? 'No medicines yet' : 'No matches'}</div>${items.length === 0 ? 'Add your first item using the form above.' : 'Try a different search.'}</div>`;
@@ -286,18 +329,21 @@ function render() {
 
   listEl.innerHTML = filtered.map(it => {
     const cls = urgencyClass(it.expiry);
+    const meta = metaLine(it);
+    const val = lineValue(it);
     return `
       <div class="row ${cls}" data-id="${it.id}">
         <div>
           <div class="name">${escapeHtml(it.name)}</div>
+          ${meta ? `<div class="meta">${escapeHtml(meta)}</div>` : ''}
           <div class="meta ${cls}">${expiryLabel(it.expiry)}</div>
         </div>
+        <div class="value-col">${val > 0 ? formatINR(val) : '—'}</div>
         <div class="qty-group">
           <button type="button" data-action="dec" aria-label="Decrease quantity">−</button>
           <span class="qty">${it.quantity}</span>
           <button type="button" data-action="inc" aria-label="Increase quantity">+</button>
         </div>
-        <div></div>
         <button type="button" class="del-btn" data-action="del">Remove</button>
       </div>`;
   }).join('');
@@ -306,11 +352,18 @@ function render() {
 $('addForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const name = $('fName').value.trim();
+  const batch = $('fBatch').value.trim();
+  const supplier = $('fSupplier').value.trim();
   const quantity = parseInt($('fQty').value, 10) || 0;
+  const purchaseRate = $('fRate').value ? parseFloat($('fRate').value) : null;
+  const mrp = $('fMrp').value ? parseFloat($('fMrp').value) : null;
   const expiry = $('fExp').value;
   if (!name || !expiry) return;
 
-  items.push({ id: 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), name, quantity, expiry });
+  items.push({
+    id: 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+    name, batch, supplier, quantity, purchaseRate, mrp, expiry
+  });
   saveItems();
   showStatus('Added ' + name);
   e.target.reset();
@@ -351,8 +404,8 @@ $('fExp').value = oneYear.toISOString().slice(0,10);
 loadItems();
 render();
 
-// ---- API key settings ----
-const API_KEY_STORAGE = 'store_stock_api_key';
+// ---- API key settings (Google Gemini) ----
+const API_KEY_STORAGE = 'store_stock_gemini_key';
 
 $('settingsBtn').addEventListener('click', () => {
   const panel = $('settingsPanel');
@@ -361,190 +414,4 @@ $('settingsBtn').addEventListener('click', () => {
 });
 
 $('saveKeyBtn').addEventListener('click', () => {
-  const key = $('apiKeyInput').value.trim();
-  if (!key) return;
-  localStorage.setItem(API_KEY_STORAGE, key);
-  $('settingsPanel').hidden = true;
-  showStatus('API key saved to this browser');
-});
-
-$('clearKeyBtn').addEventListener('click', () => {
-  localStorage.removeItem(API_KEY_STORAGE);
-  $('apiKeyInput').value = '';
-  showStatus('API key cleared');
-});
-
-function getApiKey() {
-  return localStorage.getItem(API_KEY_STORAGE) || '';
-}
-
-// ---- Invoice upload & extraction ----
-let pendingReview = [];
-
-function setUploadStatus(msg, isErr, spinning) {
-  const el = $('uploadStatus');
-  if (!msg) { el.hidden = true; return; }
-  el.hidden = false;
-  el.classList.toggle('err', !!isErr);
-  el.innerHTML = (spinning ? '<span class="spinner"></span>' : '') + '<span>' + escapeHtml(msg) + '</span>';
-}
-
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload = () => resolve(r.result.split(',')[1]);
-    r.onerror = () => reject(new Error('read failed'));
-    r.readAsDataURL(file);
-  });
-}
-
-$('invoiceFile').addEventListener('change', async (e) => {
-  const file = e.target.files && e.target.files[0];
-  if (!file) return;
-  const apiKey = getApiKey();
-  if (!apiKey) {
-    setUploadStatus('Add your Anthropic API key first (use the "API key" button above).', true, false);
-    e.target.value = '';
-    return;
-  }
-
-  $('reviewArea').innerHTML = '';
-  setUploadStatus('Reading invoice…', false, true);
-
-  try {
-    const base64 = await fileToBase64(file);
-    const prompt = `This image is a photo of a supplier invoice/bill for a pharmacy or medical store. ` +
-      `Extract every distinct product/medicine line item listed (ignore header rows, addresses, totals, tax and signature lines). ` +
-      `For each item give: "name" (the product/medicine name as printed, keep strength/form if shown), ` +
-      `"quantity" (the integer quantity or units billed — your best reading), and ` +
-      `"expiry" (the expiry date for that item in YYYY-MM-DD format ONLY if one is printed on the invoice for that line or its batch; otherwise null — do not guess a date). ` +
-      `Reply with ONLY a JSON array, e.g. [{"name":"Paracetamol 500mg","quantity":100,"expiry":"2027-03-01"},{"name":"Cough Syrup 100ml","quantity":20,"expiry":null}]`;
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 2000,
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'image', source: { type: 'base64', media_type: file.type || 'image/jpeg', data: base64 } },
-            { type: 'text', text: prompt },
-          ],
-        }],
-      }),
-    });
-
-    if (!response.ok) {
-      const errBody = await response.json().catch(() => null);
-      const msg = errBody?.error?.message || `Request failed (${response.status})`;
-      if (response.status === 401) setUploadStatus('That API key was rejected — check it and try again.', true, false);
-      else if (response.status === 429) setUploadStatus('Rate limited — wait a moment and try again.', true, false);
-      else setUploadStatus(msg, true, false);
-      return;
-    }
-
-    const data = await response.json();
-    const text = (data.content || []).map(b => b.text || '').join('');
-    let parsed;
-    try {
-      parsed = JSON.parse(text);
-    } catch (e) {
-      const match = text.match(/\[[\s\S]*\]/);
-      if (match) parsed = JSON.parse(match[0]);
-      else throw new Error('no JSON found');
-    }
-
-    if (!Array.isArray(parsed) || parsed.length === 0) {
-      setUploadStatus("Didn't find any line items in that photo — try a clearer shot or add manually.", true, false);
-      return;
-    }
-
-    pendingReview = parsed.map((it, i) => ({
-      _id: 'r' + i,
-      name: (it && it.name) ? String(it.name).slice(0, 120) : '',
-      quantity: (it && Number.isFinite(Number(it.quantity))) ? Math.max(0, Math.round(Number(it.quantity))) : 0,
-      expiry: (it && it.expiry && /^\d{4}-\d{2}-\d{2}$/.test(it.expiry)) ? it.expiry : '',
-    }));
-    setUploadStatus('', false, false);
-    renderReview();
-  } catch (err) {
-    setUploadStatus("Couldn't extract items from that photo — check your connection and try again.", true, false);
-  } finally {
-    e.target.value = '';
-  }
-});
-
-function renderReview() {
-  const area = $('reviewArea');
-  if (pendingReview.length === 0) { area.innerHTML = ''; return; }
-  const missingCount = pendingReview.filter(r => !r.expiry).length;
-  area.innerHTML = `
-    <div class="review-list">
-      ${pendingReview.map(r => `
-        <div class="review-row ${!r.expiry ? 'missing-exp' : ''}" data-rid="${r._id}">
-          <input type="text" value="${escapeHtml(r.name)}" data-f="name" placeholder="Medicine name">
-          <input type="number" min="0" step="1" value="${r.quantity}" data-f="quantity">
-          <input type="date" value="${r.expiry}" data-f="expiry">
-          <button type="button" class="rm" data-rm>Drop</button>
-        </div>
-      `).join('')}
-    </div>
-    ${missingCount > 0 ? `<div class="review-hint">${missingCount} item${missingCount > 1 ? 's' : ''} missing an expiry date on the invoice — fill it in before adding.</div>` : ''}
-    <div class="review-actions">
-      <button type="button" class="primary" id="confirmAddBtn">Add ${pendingReview.length} item${pendingReview.length > 1 ? 's' : ''} to stock</button>
-      <button type="button" class="cancel" id="cancelReviewBtn">Discard</button>
-      <span class="review-count">Check names, quantities and dates before adding</span>
-    </div>
-  `;
-}
-
-$('reviewArea').addEventListener('input', (e) => {
-  const row = e.target.closest('.review-row');
-  if (!row) return;
-  const item = pendingReview.find(r => r._id === row.dataset.rid);
-  if (!item) return;
-  const f = e.target.dataset.f;
-  if (f === 'quantity') item.quantity = Math.max(0, parseInt(e.target.value, 10) || 0);
-  else item[f] = e.target.value;
-  if (f === 'expiry') row.classList.toggle('missing-exp', !e.target.value);
-});
-
-$('reviewArea').addEventListener('click', (e) => {
-  if (e.target.closest('[data-rm]')) {
-    const row = e.target.closest('.review-row');
-    pendingReview = pendingReview.filter(r => r._id !== row.dataset.rid);
-    renderReview();
-    return;
-  }
-  if (e.target.id === 'cancelReviewBtn') {
-    pendingReview = [];
-    renderReview();
-    return;
-  }
-  if (e.target.id === 'confirmAddBtn') {
-    const bad = pendingReview.find(r => !r.name.trim() || !r.expiry);
-    if (bad) {
-      setUploadStatus('Every item needs a name and an expiry date before adding.', true, false);
-      return;
-    }
-    for (const r of pendingReview) {
-      items.push({ id: 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), name: r.name.trim(), quantity: r.quantity, expiry: r.expiry });
-    }
-    saveItems();
-    showStatus(`Added ${pendingReview.length} item${pendingReview.length !== 1 ? 's' : ''} to stock`);
-    pendingReview = [];
-    renderReview();
-    render();
-  }
-});
-
-</script>
-</body>
-</html>
+  con
