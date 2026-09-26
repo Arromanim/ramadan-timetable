@@ -1,210 +1,288 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ramadan Timetable 2026 - Sahibganj Jharkhand</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Store Stock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5EF;
+    --surface: #FFFFFF;
+    --line: #DEDACB;
+    --ink: #1E2A25;
+    --ink-soft: #5D6B63;
+    --brand: #1B4B43;
+    --brand-soft: #E4EDE9;
+    --amber: #B4791E;
+    --amber-soft: #FBF0DC;
+    --red: #A5341E;
+    --red-soft: #F9E5DE;
+    --radius: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14181A; --surface: #1C2124; --line: #2E3538; --ink: #ECEAE3; --ink-soft: #9AA6A0;
+      --brand: #6FBFA8; --brand-soft: #1E2E29; --amber: #E3B15F; --amber-soft: #322A16;
+      --red: #E28870; --red-soft: #3A211B;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 28px 20px 80px; }
+  header.top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 22px; flex-wrap: wrap; }
+  h1 { font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 28px; margin: 0; letter-spacing: -0.01em; color: var(--brand); }
+  .today { font-size: 13px; color: var(--ink-soft); }
+  .summary-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 22px; }
+  .sum-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
+  .sum-card .n { font-family: 'Source Serif 4', serif; font-size: 24px; font-weight: 600; line-height: 1; }
+  .sum-card .l { font-size: 12.5px; color: var(--ink-soft); margin-top: 4px; }
+  .sum-card.expired .n { color: var(--red); }
+  .sum-card.soon .n { color: var(--amber); }
 
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
+  form#addForm {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px; margin-bottom: 24px; display: grid; grid-template-columns: 1.6fr 0.8fr 1fr auto; gap: 10px; align-items: end;
+  }
+  .field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+  .field label { font-size: 12.5px; color: var(--ink-soft); }
+  .field input { font: inherit; font-size: 15px; padding: 9px 10px; border-radius: 7px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; }
+  .field input:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
+  button.primary { background: var(--brand); color: #fff; border: none; border-radius: 7px; padding: 10px 16px; font: inherit; font-weight: 600; font-size: 14.5px; cursor: pointer; white-space: nowrap; height: fit-content; }
+  button.primary:hover { opacity: 0.92; }
 
-    <!-- PDF Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+  .toolbar input[type="search"] { flex: 1; min-width: 160px; font: inherit; font-size: 14.5px; padding: 9px 12px; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+  .toolbar select { font: inherit; font-size: 14px; padding: 9px 10px; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
 
-    <!-- Urdu Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
+  .list { display: flex; flex-direction: column; gap: 8px; }
+  .row { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; grid-template-columns: 1fr auto auto auto; gap: 14px; align-items: center; }
+  .row.expired { border-left-color: var(--red); }
+  .row.soon { border-left-color: var(--amber); }
+  .row .name { font-weight: 600; font-size: 15px; }
+  .row .meta { font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; }
+  .row .meta.expired { color: var(--red); font-weight: 600; }
+  .row .meta.soon { color: var(--amber); font-weight: 600; }
+  .qty-group { display: flex; align-items: center; gap: 6px; }
+  .qty-group button { width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font-size: 15px; cursor: pointer; line-height: 1; }
+  .qty-group .qty { min-width: 30px; text-align: center; font-weight: 600; font-size: 14.5px; }
+  .del-btn { background: none; border: none; color: var(--ink-soft); cursor: pointer; font-size: 13px; padding: 6px 8px; border-radius: 6px; }
+  .del-btn:hover { background: var(--red-soft); color: var(--red); }
 
-    <style>
-        body {
-            font-family: 'Noto Sans Arabic', sans-serif;
-            background-color: #f3f4f6;
-        }
-        .urdu-text { font-family: 'Noto Sans Arabic', serif; }
+  .empty { text-align: center; padding: 48px 20px; color: var(--ink-soft); background: var(--surface); border: 1px dashed var(--line); border-radius: var(--radius); }
+  .empty .big { font-family: 'Source Serif 4', serif; font-size: 18px; color: var(--ink); margin-bottom: 6px; }
 
-        @media print {
-            .no-print { display: none !important; }
-            body {
-                background-color: white;
-                padding: 0;
-                color: #000 !important;
-            }
-            .main-card {
-                box-shadow: none;
-                border: 1px solid #ccc;
-                border-radius: 0;
-                max-width: 100%;
-                width: 100%;
-            }
-            .print-dark-header {
-                background-color: #1f2937 !important;
-                color: #000 !important;
-            }
-            .print-dark-head {
-                background-color: #374151 !important;
-                color: #000 !important;
-            }
-            th, td {
-                border: 1px solid #999 !important;
-            }
-        }
-    </style>
+  .status { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 20px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
+  .status.show { opacity: 0.92; }
+
+  .banner { background: var(--amber-soft); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 20px; font-size: 13px; color: var(--ink-soft); }
+
+  @media (max-width: 560px) {
+    form#addForm { grid-template-columns: 1fr 1fr; }
+    form#addForm button { grid-column: 1 / -1; }
+    .row { grid-template-columns: 1fr; row-gap: 8px; }
+    .row .qty-group, .row .del-btn { justify-self: start; }
+  }
+</style>
 </head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Store Stock</h1>
+    <div class="today" id="todayLabel"></div>
+  </header>
 
-<body class="p-2 md:p-8">
+  <div class="summary-row">
+    <div class="sum-card"><div class="n" id="sumTotal">0</div><div class="l">medicines tracked</div></div>
+    <div class="sum-card soon"><div class="n" id="sumSoon">0</div><div class="l">expiring within 30 days</div></div>
+    <div class="sum-card expired"><div class="n" id="sumExpired">0</div><div class="l">already expired</div></div>
+  </div>
 
-<div id="pdf-content" class="main-card max-w-4xl mx-auto bg-white shadow-2xl rounded-xl overflow-hidden border border-emerald-100">
-
-    <!-- TOP SECTION -->
-    <div class="p-6 text-center space-y-3 bg-emerald-800 text-white print-dark-header">
-
-        <h1 class="text-4xl md:text-6xl font-black urdu-text">رمضان مبارک</h1>
-
-        <h2 class="text-xl md:text-2xl font-bold urdu-text">
-            رمضان ٹائم ٹیبل ۲۰۲۶ء - ١٤٤٧ھ
-        </h2>
-
-        <p class="text-sm md:text-lg font-medium tracking-wide opacity-90 uppercase">
-            Ramadan Timetable 2026 - 1447 AH
-        </p>
-
-        <div class="flex flex-col items-center gap-1 border-t border-white/20 pt-3">
-            <span class="text-xl font-bold urdu-text">صاحب گنج، جھارکھنڈ</span>
-            <span class="text-xs md:text-sm font-bold tracking-widest uppercase opacity-80">
-                Sahibganj Jharkhand
-            </span>
-        </div>
-
-        <!-- BUTTONS -->
-        <div class="no-print pt-4 flex flex-wrap justify-center gap-3">
-
-            <button onclick="window.print()"
-                class="bg-slate-800 text-white px-6 py-2 rounded-full font-black
-                       flex items-center gap-2
-                       transition-all duration-150 ease-out
-                       hover:bg-slate-700
-                       active:scale-90 active:bg-slate-900
-                       shadow-lg active:shadow-md">
-                <span class="urdu-text">پرنٹ کریں</span>
-                <span>/ PRINT</span>
-            </button>
-
-            <button onclick="downloadPDF()"
-                class="bg-slate-800 text-white px-6 py-2 rounded-full font-black
-                       flex items-center gap-2
-                       transition-all duration-150 ease-out
-                       hover:bg-slate-700
-                       active:scale-90 active:bg-slate-900
-                       shadow-lg active:shadow-md">
-                <span class="urdu-text">ڈاؤن لوڈ</span>
-                <span>/ DOWNLOAD</span>
-            </button>
-
-        </div>
+  <form id="addForm">
+    <div class="field">
+      <label for="fName">Medicine name</label>
+      <input type="text" id="fName" placeholder="e.g. Paracetamol 500mg" required>
     </div>
-
-    <!-- TABLE -->
-    <div class="overflow-x-auto">
-        <table class="w-full text-center border-collapse">
-            <thead class="bg-emerald-700 text-white print-dark-head">
-                <tr>
-                    <th class="py-4 px-2 border-l">رمضان</th>
-                    <th class="py-4 px-2 border-l">تاریخ</th>
-                    <th class="py-4 px-2 border-l">ختم سحر</th>
-                    <th class="py-4 px-2 border-l">اذان فجر</th>
-                    <th class="py-4 px-2">افطار</th>
-                </tr>
-            </thead>
-            <tbody id="timetableBody"></tbody>
-        </table>
+    <div class="field">
+      <label for="fQty">Quantity</label>
+      <input type="number" id="fQty" min="0" step="1" value="1" required>
     </div>
-
-    <!-- FOOTER -->
-    <div class="p-4 bg-emerald-50/30 text-center border-t border-emerald-100">
-        <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">
-            Data Source:
-            <span class="text-emerald-700">Kashkol-e-Urdu</span>
-            (صاحب گنج جھارکھنڈ)
-        </p>
+    <div class="field">
+      <label for="fExp">Expiry date</label>
+      <input type="date" id="fExp" required>
     </div>
+    <button type="submit" class="primary">Add stock</button>
+  </form>
 
+  <div class="toolbar">
+    <input type="search" id="search" placeholder="Search medicines…">
+    <select id="sortSel">
+      <option value="expiry">Sort: expiry (soonest)</option>
+      <option value="name">Sort: name (A–Z)</option>
+      <option value="qty">Sort: quantity (low first)</option>
+    </select>
+  </div>
+
+  <div class="list" id="list"></div>
 </div>
 
-<script>
-const originalData = [
- { d: 1, date: "19 Feb", s: "04:55", i: "17:35" },
- { d: 2, date: "20 Feb", s: "04:54", i: "17:36" },
- { d: 3, date: "21 Feb", s: "04:53", i: "17:37" },
- { d: 4, date: "22 Feb", s: "04:53", i: "17:37" },
- { d: 5, date: "23 Feb", s: "04:52", i: "17:38" },
- { d: 6, date: "24 Feb", s: "04:51", i: "17:38" },
- { d: 7, date: "25 Feb", s: "04:50", i: "17:39" },
- { d: 8, date: "26 Feb", s: "04:50", i: "17:39" },
- { d: 9, date: "27 Feb", s: "04:49", i: "17:40" },
- { d: 10, date: "28 Feb", s: "04:48", i: "17:40" },
- { d: 11, date: "01 Mar", s: "04:46", i: "17:42" },
- { d: 12, date: "02 Mar", s: "04:45", i: "17:42" },
- { d: 13, date: "03 Mar", s: "04:44", i: "17:43" },
- { d: 14, date: "04 Mar", s: "04:43", i: "17:43" },
- { d: 15, date: "05 Mar", s: "04:43", i: "17:44" },
- { d: 16, date: "06 Mar", s: "04:42", i: "17:44" },
- { d: 17, date: "07 Mar", s: "04:41", i: "17:45" },
- { d: 18, date: "08 Mar", s: "04:40", i: "17:45" },
- { d: 19, date: "09 Mar", s: "04:39", i: "17:46" },
- { d: 20, date: "10 Mar", s: "04:38", i: "17:46" },
- { d: 21, date: "11 Mar", s: "04:37", i: "17:47" },
- { d: 22, date: "12 Mar", s: "04:36", i: "17:47" },
- { d: 23, date: "13 Mar", s: "04:35", i: "17:48" },
- { d: 24, date: "14 Mar", s: "04:34", i: "17:48" },
- { d: 25, date: "15 Mar", s: "04:33", i: "17:48" },
- { d: 26, date: "16 Mar", s: "04:31", i: "17:49" },
- { d: 27, date: "17 Mar", s: "04:30", i: "17:49" },
- { d: 28, date: "18 Mar", s: "04:29", i: "17:50" },
- { d: 29, date: "19 Mar", s: "04:28", i: "17:50" },
- { d: 30, date: "20 Mar", s: "04:27", i: "17:51" }
-];
+<div class="status" id="status"></div>
 
-function format12hNoAmPm(timeStr, offset) {
-    let [h, m] = timeStr.split(':').map(Number);
-    let total = h * 60 + m + offset;
-    total = (total + 1440) % 1440;
-    let nh = Math.floor(total / 60);
-    let nm = total % 60;
-    nh = nh % 12 || 12;
-    return `${nh}:${nm < 10 ? '0' + nm : nm}`;
+<script>
+// Data lives in this browser's localStorage under STORAGE_KEY.
+// Same device + same browser = data persists across visits.
+// Different device/browser = separate data. Back it up with the
+// Export/Import snippet in the README if you need to move it.
+const STORAGE_KEY = 'store_stock_items_v1';
+
+let items = [];
+const $ = (id) => document.getElementById(id);
+const listEl = $('list');
+const statusEl = $('status');
+
+$('todayLabel').textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+function loadItems() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    items = raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    items = [];
+  }
 }
 
-const tbody = document.getElementById('timetableBody');
+function saveItems() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  } catch (e) {
+    showStatus("Couldn't save — your browser storage may be full or blocked");
+  }
+}
 
-originalData.forEach((row, idx) => {
-    const tr = document.createElement('tr');
-    tr.className = `border-b ${idx % 2 === 0 ? 'bg-white' : 'bg-emerald-50/20'}`;
+function showStatus(msg) {
+  statusEl.textContent = msg;
+  statusEl.classList.add('show');
+  clearTimeout(showStatus._t);
+  showStatus._t = setTimeout(() => statusEl.classList.remove('show'), 1800);
+}
 
-    tr.innerHTML = `
-        <td class="py-3 px-2 font-bold text-emerald-900 border-l">${row.d}</td>
-        <td class="py-3 px-2 font-bold text-slate-600 border-l">${row.date}</td>
-        <td class="py-3 px-2 font-mono text-blue-700 font-black border-l">${format12hNoAmPm(row.s, -3)}</td>
-        <td class="py-3 px-2 font-mono text-indigo-700 font-black border-l">${format12hNoAmPm(row.s, 2)}</td>
-        <td class="py-3 px-2 font-mono text-orange-700 font-black">${format12hNoAmPm(row.i, 2)}</td>
-    `;
-    tbody.appendChild(tr);
+function daysUntil(dateStr) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const d = new Date(dateStr + 'T00:00:00');
+  return Math.round((d - today) / 86400000);
+}
+
+function urgencyClass(dateStr) {
+  const days = daysUntil(dateStr);
+  if (days < 0) return 'expired';
+  if (days <= 30) return 'soon';
+  return '';
+}
+
+function expiryLabel(dateStr) {
+  const days = daysUntil(dateStr);
+  const formatted = new Date(dateStr + 'T00:00:00').toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+  if (days < 0) return `Expired ${formatted} (${Math.abs(days)}d ago)`;
+  if (days === 0) return `Expires today (${formatted})`;
+  if (days <= 30) return `Expires ${formatted} (in ${days}d)`;
+  return `Expires ${formatted}`;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function render() {
+  const q = $('search').value.trim().toLowerCase();
+  const sortMode = $('sortSel').value;
+
+  let filtered = items.filter(it => it.name.toLowerCase().includes(q));
+  filtered.sort((a, b) => {
+    if (sortMode === 'name') return a.name.localeCompare(b.name);
+    if (sortMode === 'qty') return a.quantity - b.quantity;
+    return a.expiry.localeCompare(b.expiry);
+  });
+
+  $('sumTotal').textContent = items.length;
+  $('sumSoon').textContent = items.filter(it => { const d = daysUntil(it.expiry); return d >= 0 && d <= 30; }).length;
+  $('sumExpired').textContent = items.filter(it => daysUntil(it.expiry) < 0).length;
+
+  if (filtered.length === 0) {
+    listEl.innerHTML = `<div class="empty"><div class="big">${items.length === 0 ? 'No medicines yet' : 'No matches'}</div>${items.length === 0 ? 'Add your first item using the form above.' : 'Try a different search.'}</div>`;
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(it => {
+    const cls = urgencyClass(it.expiry);
+    return `
+      <div class="row ${cls}" data-id="${it.id}">
+        <div>
+          <div class="name">${escapeHtml(it.name)}</div>
+          <div class="meta ${cls}">${expiryLabel(it.expiry)}</div>
+        </div>
+        <div class="qty-group">
+          <button type="button" data-action="dec" aria-label="Decrease quantity">−</button>
+          <span class="qty">${it.quantity}</span>
+          <button type="button" data-action="inc" aria-label="Increase quantity">+</button>
+        </div>
+        <div></div>
+        <button type="button" class="del-btn" data-action="del">Remove</button>
+      </div>`;
+  }).join('');
+}
+
+$('addForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = $('fName').value.trim();
+  const quantity = parseInt($('fQty').value, 10) || 0;
+  const expiry = $('fExp').value;
+  if (!name || !expiry) return;
+
+  items.push({ id: 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), name, quantity, expiry });
+  saveItems();
+  showStatus('Added ' + name);
+  e.target.reset();
+  $('fQty').value = 1;
+  $('fName').focus();
+  render();
 });
 
-function downloadPDF() {
-    const element = document.getElementById('pdf-content');
-    const buttons = document.querySelector('.no-print');
-    buttons.style.visibility = 'hidden';
+listEl.addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-action]');
+  if (!btn) return;
+  const row = btn.closest('.row');
+  const id = row.dataset.id;
+  const item = items.find(it => it.id === id);
+  if (!item) return;
+  const action = btn.dataset.action;
 
-    html2pdf().set({
-        margin: 0.5,
-        filename: 'Ramadan_Timetable_2026_Sahibganj.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    }).from(element).save().then(() => {
-        buttons.style.visibility = 'visible';
-    });
-}
+  if (action === 'inc' || action === 'dec') {
+    item.quantity = Math.max(0, item.quantity + (action === 'inc' ? 1 : -1));
+    saveItems();
+    render();
+  } else if (action === 'del') {
+    if (!confirm(`Remove "${item.name}" from stock?`)) return;
+    items = items.filter(it => it.id !== id);
+    saveItems();
+    showStatus('Removed ' + item.name);
+    render();
+  }
+});
+
+$('search').addEventListener('input', render);
+$('sortSel').addEventListener('change', render);
+
+const oneYear = new Date();
+oneYear.setFullYear(oneYear.getFullYear() + 1);
+$('fExp').value = oneYear.toISOString().slice(0,10);
+
+loadItems();
+render();
 </script>
-
 </body>
 </html>
